@@ -6,7 +6,7 @@ import thunkMiddleware from "redux-thunk";
 const AppReducer = combineReducers({});
 
 const persistConfig = {
-  key: "tequry",
+  key: "news",
   storage,
 };
 
