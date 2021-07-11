@@ -1,9 +1,31 @@
 import { pick } from "lodash";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import { getWeatherDetails } from "../ducks/weather";
 
 const Home = () => {
-  const [currentLocation, setcurrentLocation] = useState({});
+  const dispatch = useDispatch();
+  const [currentLocation, setcurrentLocation] = useState(null);
+  const [weatherData, setweatherData] = useState(null);
+
+  const weatherDetails = useSelector(
+    (state) => state?.weatherReducer?.weatherDetails
+  );
+  const weatherDetailsSuccess = useSelector(
+    (state) => state?.weatherReducer?.weatherDetailsSuccess
+  );
+  const weatherDetailsError = useSelector(
+    (state) => state?.weatherReducer?.weatherDetailsError
+  );
+
+  const weatherDetailsRef = useRef();
+  const weatherDetailsSuccessRef = useRef();
+  const weatherDetailsErrorRef = useRef();
+
+  weatherDetailsRef.current = weatherDetails;
+  weatherDetailsSuccessRef.current = weatherDetailsSuccess;
+  weatherDetailsErrorRef.current = weatherDetailsError;
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -12,6 +34,15 @@ const Home = () => {
       });
     }
   }, []);
+
+  useEffect(() => {
+    if (currentLocation) {
+      dispatch(getWeatherDetails(currentLocation)).then(() => {
+        setweatherData(weatherDetailsRef.current);
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentLocation]);
 
   const successCallback = (data) => {
     const location = pick(data?.coords, ["latitude", "longitude"]);
@@ -25,7 +56,13 @@ const Home = () => {
     });
   };
 
-  return <span>Home</span>;
+  return (
+    <>
+      {console.log("{weatherData}", weatherData)}
+      <span>Home</span>
+      <p>weather :{weatherData?.main?.temp} </p>
+    </>
+  );
 };
 
 export default Home;
