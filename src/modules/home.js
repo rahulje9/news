@@ -3,6 +3,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { getWeatherDetails } from "../ducks/weather";
+import { getNews } from "../ducks/news";
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -27,6 +28,7 @@ const Home = () => {
   weatherDetailsSuccessRef.current = weatherDetailsSuccess;
   weatherDetailsErrorRef.current = weatherDetailsError;
 
+  // fetch location
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(successCallback, errorCallback, {
@@ -35,6 +37,7 @@ const Home = () => {
     }
   }, []);
 
+  // fetch weather
   useEffect(() => {
     if (currentLocation) {
       dispatch(getWeatherDetails(currentLocation)).then(() => {
@@ -43,6 +46,14 @@ const Home = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentLocation]);
+
+  useEffect(() => {
+    if (weatherData?.sys?.country) {
+      console.log("weatherData", weatherData?.sys?.country);
+      dispatch(getNews(weatherData?.sys?.country)).then(() => {});
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [weatherData?.sys?.country]);
 
   const successCallback = (data) => {
     const location = pick(data?.coords, ["latitude", "longitude"]);
@@ -58,7 +69,6 @@ const Home = () => {
 
   return (
     <>
-      {console.log("{weatherData}", weatherData)}
       <span>Home</span>
       <p>weather :{weatherData?.main?.temp} </p>
     </>
