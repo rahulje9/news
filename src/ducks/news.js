@@ -20,7 +20,9 @@ export const getNews = (country, page) => {
   return (dispatch) => {
     return getNewsAPI(country, page)
       .then((res) => {
-        console.log({ res });
+        console.log("page", page);
+        return res;
+        // console.log({ res });
         // dispatch(getWeatherDetailsSuccess(res));
       })
       .catch((err) => {
