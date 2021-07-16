@@ -2,8 +2,8 @@ import { Provider } from "react-redux";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { PersistGate } from "redux-persist/integration/react";
-import { persistor, store } from "./common/store";
-import Router from "./router/router";
+import { persistor, store } from "./app/common/store";
+import Router from "./app/router/router";
 
 function App() {
   return (

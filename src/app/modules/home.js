@@ -5,6 +5,10 @@ import { toast } from "react-toastify";
 import { getWeatherDetails } from "../ducks/weather";
 import { getNews } from "../ducks/news";
 import useNewsFetch from "../hooks/useNewsFetch";
+// import styles from "../styles/home.css";
+import "../styles/home.css";
+import Header from "../components/header/Header";
+import NewsCard from "../components/newcard/NewsCard";
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -92,24 +96,27 @@ const Home = () => {
 
   return (
     <>
+      <Header />
       <span>Home</span>
       <p>weather :{weatherData?.main?.temp} </p>
+      {console.log("data", data)}
 
       {data.map((item, index) => {
         if (data.length === index + 1) {
           return (
-            <div ref={lastElementRef} key={index}>
-              {`${item?.title} \n \n`}
-              <br />
-              <br />
-            </div>
+            <NewsCard data={item} key={index} reference={lastElementRef} />
           );
         } else {
-          return <div key={index}>{item?.title}</div>;
+          return <NewsCard data={item} key={index} />;
+          // <div key={index}>{item?.title}</div>;
         }
       })}
       <div>{loading && "Loading..."}</div>
       <div>{error && "Error"}</div>
+      <br />
+      <br />
+      <br />
+      <br />
     </>
   );
 };

@@ -18,7 +18,6 @@ export default function useNewsFetch(country, pageNumber) {
   // }, [query]);
 
   useEffect(() => {
-    console.log("pageNumber", pageNumber);
     setError(false);
     fetchNews();
 
@@ -34,7 +33,7 @@ export default function useNewsFetch(country, pageNumber) {
         setLoading(false);
 
         setData((prevData) => {
-          return [...new Set([...prevData, ...res.articles])];
+          return [...new Set([...prevData, ...res?.articles])];
         });
         setHasMore(res?.articles?.length > 0);
         setLoading(false);
