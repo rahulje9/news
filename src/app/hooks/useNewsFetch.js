@@ -1,7 +1,4 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
-import { NEWS_API_BASE_URL } from "../constants/urls";
-import { NEWS_KEY } from "../constants/constants";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getNews } from "../ducks/news";
 
@@ -13,14 +10,26 @@ export default function useNewsFetch(country, pageNumber) {
   const [data, setData] = useState([]);
   const [hasMore, setHasMore] = useState(false);
 
-  // useEffect(() => {
-  //   setData([]);
-  // }, [query]);
+  const newsDetails = useSelector((state) => state?.newsReducer?.newsDetails);
+
+  const newsDetailsSuccess = useSelector(
+    (state) => state?.newsReducer?.newsDetailsSuccess
+  );
+  const newsDetailsError = useSelector(
+    (state) => state?.newsReducer?.newsDetailsError
+  );
+
+  const newsDetailsRef = useRef();
+  const newsDetailsSuccessRef = useRef();
+  const newsDetailsErrorRef = useRef();
+
+  newsDetailsRef.current = newsDetails;
+  newsDetailsSuccessRef.current = newsDetailsSuccess;
+  newsDetailsErrorRef.current = newsDetailsError;
 
   useEffect(() => {
     setError(false);
     fetchNews();
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageNumber, country]);
 
@@ -29,14 +38,13 @@ export default function useNewsFetch(country, pageNumber) {
       setLoading(true);
 
       dispatch(getNews(country, pageNumber)).then((res) => {
-        console.log({ res });
         setLoading(false);
 
-        setData((prevData) => {
-          return [...new Set([...prevData, ...res?.articles])];
-        });
-        setHasMore(res?.articles?.length > 0);
-        setLoading(false);
+        setData((prevData) => [
+          ...new Set([...prevData, ...newsDetailsRef.current]),
+        ]);
+
+        setHasMore(newsDetailsRef.current?.length > 0);
       });
     }
   };

@@ -2,15 +2,19 @@ import React from "react";
 import * as Bootstrap from "react-bootstrap";
 import "./styles.css";
 
-const NewsCard = ({ data, key, reference }) => {
+const NewsCard = ({ data, index, reference }) => {
   return (
-    <div ref={reference} className="container">
-      <Bootstrap.Card className="custom-card">
+    <div ref={reference} className="container" key={index}>
+      <Bootstrap.Card
+        className="custom-card"
+        onClick={() => {
+          data?.url && window.open(data?.url);
+        }}
+      >
         <Bootstrap.Card.Img variant="top" src={data?.urlToImage} />
         <Bootstrap.Card.Body>
           <Bootstrap.Card.Title>{data?.title}</Bootstrap.Card.Title>
           <Bootstrap.Card.Text>{data?.description}</Bootstrap.Card.Text>
-          <Bootstrap.Button variant="primary">Go somewhere</Bootstrap.Button>
         </Bootstrap.Card.Body>
       </Bootstrap.Card>
     </div>

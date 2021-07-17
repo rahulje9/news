@@ -1,7 +1,7 @@
 import { getNewsAPI } from "../services/api";
 
-const FETCH_NEWS_SUCCESS = "ducks/weather/FETCH_NEWS_SUCCESS";
-const FETCH_NEWS_ERROR = "ducks/weather/FETCH_NEWS_ERROR";
+const FETCH_NEWS_SUCCESS = "ducks/news/FETCH_NEWS_SUCCESS";
+const FETCH_NEWS_ERROR = "ducks/news/FETCH_NEWS_ERROR";
 
 const initialState = {
   newsDetails: null,
@@ -11,28 +11,48 @@ const initialState = {
 
 export default function newsReducer(state = initialState, action) {
   switch (action.type) {
+    case FETCH_NEWS_SUCCESS: {
+      return {
+        ...state,
+        newsDetails: action.payload,
+        newsDetailsSuccess: true,
+        newsDetailsError: null,
+      };
+    }
+    case FETCH_NEWS_ERROR: {
+      return {
+        ...state,
+        newsDetailsSuccess: false,
+        newsDetailsError: action.payload,
+      };
+    }
     default:
       return state;
   }
 }
 
 export const getNews = (country, page) => {
-  return (dispatch) => {
+  return (dispatch, getState) => {
     return getNewsAPI(country, page)
       .then((res) => {
-        console.log("page", page);
-        return res;
-        // console.log({ res });
-        // dispatch(getWeatherDetailsSuccess(res));
+        dispatch(getWeatherDetailsSuccess(res?.articles));
       })
       .catch((err) => {
-        console.log({ err });
-
-        // dispatch(getWeatherDetailsError(err));
+        dispatch(getWeatherDetailsError(err));
       });
   };
 };
 
-export const getWeatherDetailsSuccess = (data) => {};
+export const getWeatherDetailsSuccess = (data) => {
+  return {
+    type: FETCH_NEWS_SUCCESS,
+    payload: data,
+  };
+};
 
-export const getWeatherDetailsError = (data) => {};
+export const getWeatherDetailsError = (err) => {
+  return {
+    type: FETCH_NEWS_ERROR,
+    payload: err,
+  };
+};

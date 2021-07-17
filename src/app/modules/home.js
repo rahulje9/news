@@ -1,14 +1,14 @@
 import { pick } from "lodash";
-import React, { useEffect, useState, useRef, useCallback } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import Header from "../components/header/Header";
+import NewsCard from "../components/newsCard/NewsCard";
+import WeatherCard from "../components/weatherCard/WeatherCard";
 import { getWeatherDetails } from "../ducks/weather";
-import { getNews } from "../ducks/news";
 import useNewsFetch from "../hooks/useNewsFetch";
 // import styles from "../styles/home.css";
 import "../styles/home.css";
-import Header from "../components/header/Header";
-import NewsCard from "../components/newcard/NewsCard";
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -47,7 +47,6 @@ const Home = () => {
       if (observer.current) observer.current.disconnect();
       observer.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting && hasMore) {
-          console.log("setPageNumber", pageNumber);
           setPageNumber((prevPageNumber) => prevPageNumber + 1);
         }
       });
@@ -75,13 +74,6 @@ const Home = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentLocation]);
 
-  useEffect(() => {
-    if (weatherData?.sys?.country) {
-      // dispatch(getNews(weatherData?.sys?.country)).then(() => {});
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [weatherData?.sys?.country]);
-
   const successCallback = (data) => {
     const location = pick(data?.coords, ["latitude", "longitude"]);
     setcurrentLocation(location);
@@ -97,20 +89,24 @@ const Home = () => {
   return (
     <>
       <Header />
-      <span>Home</span>
-      <p>weather :{weatherData?.main?.temp} </p>
-      {console.log("data", data)}
-
-      {data.map((item, index) => {
-        if (data.length === index + 1) {
-          return (
-            <NewsCard data={item} key={index} reference={lastElementRef} />
-          );
-        } else {
-          return <NewsCard data={item} key={index} />;
-          // <div key={index}>{item?.title}</div>;
-        }
-      })}
+      <WeatherCard data={weatherData} />
+      {data?.length
+        ? data.map((item, index) => {
+            return (
+              <div key={index}>
+                {data.length === index + 1 ? (
+                  <NewsCard
+                    data={item}
+                    index={index}
+                    reference={lastElementRef}
+                  />
+                ) : (
+                  <NewsCard data={item} index={index} />
+                )}
+              </div>
+            );
+          })
+        : null}
       <div>{loading && "Loading..."}</div>
       <div>{error && "Error"}</div>
       <br />
