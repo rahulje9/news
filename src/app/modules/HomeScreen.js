@@ -1,5 +1,6 @@
 import { pick } from "lodash";
 import React, { useCallback, useEffect, useRef, useState } from "react";
+import * as Bootstrap from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import Header from "../components/header/Header";
@@ -9,7 +10,6 @@ import { getWeatherDetails } from "../ducks/weather";
 import useNewsFetch from "../hooks/useNewsFetch";
 // import styles from "../styles/home.css";
 import "../styles/home.css";
-import * as Bootstrap from "react-bootstrap";
 
 const Home = () => {
   const dispatch = useDispatch();

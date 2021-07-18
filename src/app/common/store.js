@@ -2,8 +2,8 @@ import { applyMiddleware, combineReducers, compose, createStore } from "redux";
 import { persistReducer, persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import thunkMiddleware from "redux-thunk";
-import weatherReducer from "../ducks/weather";
 import newsReducer from "../ducks/news";
+import weatherReducer from "../ducks/weather";
 
 const rootPersistConfig = {
   key: "news",
@@ -33,7 +33,7 @@ const persistedReducer = persistReducer(rootPersistConfig, rootReducer);
 
 function configureStore(initialState) {
   const enhancer = compose(applyMiddleware(thunkMiddleware));
-  return createStore(persistedReducer, initialState, enhancer); //Creating store file with reducer and thunk middleware
+  return createStore(persistedReducer, initialState, enhancer);
 }
 
 const store = configureStore({});

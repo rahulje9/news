@@ -1,7 +1,6 @@
 import React from "react";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
 import Home from "../modules/HomeScreen";
-import { Redirect } from "react-router-dom";
 
 const Router = () => {
   return (

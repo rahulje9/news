@@ -1,9 +1,9 @@
 import axios from "axios";
-import {
-  OPEN_WEATHER_MAP_BASE_URL,
-  NEWS_API_BASE_URL,
-} from "../constants/urls";
 import { NEWS_KEY } from "../constants/constants";
+import {
+  NEWS_API_BASE_URL,
+  OPEN_WEATHER_MAP_BASE_URL,
+} from "../constants/urls";
 
 // axios instance for weather
 export const axiosWeatherInstance = axios.create({
