@@ -114,6 +114,7 @@ const Home = () => {
     <>
       <Header />
       <WeatherCard data={weatherData} />
+
       {loading ? (
         <div className="loader">
           <Bootstrap.Spinner animation="border" role="status">
@@ -121,6 +122,7 @@ const Home = () => {
           </Bootstrap.Spinner>
         </div>
       ) : null}
+
       <Bootstrap.Card.Body className="home-label-card">
         <Bootstrap.InputGroup size="lg" style={{ width: "80%" }}>
           <Bootstrap.FormControl
