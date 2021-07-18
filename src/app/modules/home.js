@@ -9,6 +9,7 @@ import { getWeatherDetails } from "../ducks/weather";
 import useNewsFetch from "../hooks/useNewsFetch";
 // import styles from "../styles/home.css";
 import "../styles/home.css";
+import * as Bootstrap from "react-bootstrap";
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -16,6 +17,8 @@ const Home = () => {
   const [pageNumber, setPageNumber] = useState(1);
   const [currentLocation, setcurrentLocation] = useState(null);
   const [weatherData, setweatherData] = useState(null);
+  const [searchWord, setsearchWord] = useState("");
+  const [newsData, setnewsData] = useState([]);
 
   const weatherDetails = useSelector(
     (state) => state?.weatherReducer?.weatherDetails
@@ -74,6 +77,11 @@ const Home = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentLocation]);
 
+  useEffect(() => {
+    generateFilteredData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchWord, data]);
+
   const successCallback = (data) => {
     const location = pick(data?.coords, ["latitude", "longitude"]);
     setcurrentLocation(location);
@@ -86,33 +94,71 @@ const Home = () => {
     });
   };
 
+  const generateFilteredData = () => {
+    const _data =
+      searchWord?.trim()?.length !== 0
+        ? data?.length
+          ? data?.filter((item) => {
+              return (
+                item?.title
+                  ?.toLowerCase()
+                  ?.includes(searchWord?.toLowerCase()) && item
+              );
+            })
+          : []
+        : data;
+    setnewsData(_data);
+  };
+
   return (
     <>
       <Header />
       <WeatherCard data={weatherData} />
-      {data?.length
-        ? data.map((item, index) => {
+      {loading ? (
+        <div className="loader">
+          <Bootstrap.Spinner animation="border" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </Bootstrap.Spinner>
+        </div>
+      ) : null}
+      <Bootstrap.Card.Body className="home-label-card">
+        <Bootstrap.InputGroup size="lg" style={{ width: "80%" }}>
+          <Bootstrap.FormControl
+            placeholder="Search latest News..."
+            maxLength={40}
+            value={searchWord}
+            onChange={(e) => setsearchWord(e.target.value)}
+          />
+          <Bootstrap.Button
+            onClick={() => {
+              setsearchWord("");
+            }}
+            variant="outline-secondary"
+            id="button-addon1"
+          >
+            Clear
+          </Bootstrap.Button>
+        </Bootstrap.InputGroup>
+      </Bootstrap.Card.Body>
+
+      {newsData?.length
+        ? newsData?.map((item, index) => {
             return (
               <div key={index}>
-                {data.length === index + 1 ? (
+                {newsData?.length === index + 1 ? (
                   <NewsCard
+                    loading={loading}
                     data={item}
                     index={index}
                     reference={lastElementRef}
                   />
                 ) : (
-                  <NewsCard data={item} index={index} />
+                  <NewsCard loading={loading} data={item} index={index} />
                 )}
               </div>
             );
           })
         : null}
-      <div>{loading && "Loading..."}</div>
-      <div>{error && "Error"}</div>
-      <br />
-      <br />
-      <br />
-      <br />
     </>
   );
 };
