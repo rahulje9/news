@@ -1,6 +1,6 @@
 import React from "react";
-import "./styles.css";
 import icon from "../../assets/book-open.svg";
+import "./styles.css";
 
 const Header = () => {
   return (
