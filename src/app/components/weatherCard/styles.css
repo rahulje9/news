@@ -1,0 +1,28 @@
+.weather-card-container {
+  padding-top: 80px;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  flex-wrap: wrap;
+  cursor: auto;
+}
+
+.icon-temp {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.temp {
+  font-size: 14px;
+  padding-top: 10px;
+}
+
+.weather-custom-card {
+  width: 80%;
+}
+
+.card-row {
+  display: flex;
+  flex-direction: row;
+}
