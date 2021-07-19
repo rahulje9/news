@@ -39,12 +39,12 @@ export default function useNewsFetch(country, pageNumber) {
 
       dispatch(getNews(country, pageNumber)).then((res) => {
         setLoading(false);
-
-        setData((prevData) => [
-          ...new Set([...prevData, ...newsDetailsRef.current]),
-        ]);
-
-        setHasMore(newsDetailsRef.current?.length > 0);
+        if (newsDetailsRef.current) {
+          setData((prevData) => [
+            ...new Set([...prevData, ...newsDetailsRef.current]),
+          ]);
+          setHasMore(newsDetailsRef.current?.length > 0);
+        }
       });
     }
   };
